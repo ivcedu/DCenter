@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>Duplicating Center Login</title>
+        <!-- application css -->
+        <link rel="stylesheet" href="css/style-2.css">
+    </head>
+    <body>
+        <div class="body"></div>
+        <div class="grad"></div>
+        <div class="header">
+            <div>Print Request</div>
+        </div>
+        <div class="loginFrame"></div>
+        <div class="login">
+            <input type="text" placeholder="username or email address" name="user" id="username"><br>
+            <input type="password" placeholder="password" name="password" id="password"><br>
+            <input type="button" value="Login" id="btn_login">
+        </div>
+        <div class="footer" id="logn_error">
+            <div>Invalid username or password</div>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/bowser/bowser.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/Login.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>

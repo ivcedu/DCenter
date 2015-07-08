@@ -1,0 +1,13 @@
+@media print {      
+    a[href]:after { content: none !important; }
+    .hidden-print { display: none !important; }
+    
+    .print-color-box { 
+        color: white !important;
+        text-shadow: none !important;
+        background: gray !important;
+        box-shadow: none !important;
+        
+        -webkit-print-color-adjust: exact;
+    }
+}
