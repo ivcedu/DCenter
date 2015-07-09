@@ -8,14 +8,12 @@ var m_legal = 0.06;
 var m_legal_color = 0.30;
 var m_tabloid = 0.10;
 var m_tabloid_color = 0.40;
-var m_duplex = 1;
+
 var m_color_paper = 0.05;
 var m_front_cover = 0.05;
 var m_front_cover_color = 0.25;
 var m_back_cover = 0.05;
 var m_back_cover_color = 0.25;
-var m_three_hole = 0.02;
-var m_staple = 0.02;
 var m_cut = 0.75;
 
 var m_str_dup_cost_info = "";
