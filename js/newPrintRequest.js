@@ -8,14 +8,11 @@ var m_legal = 0.06;
 var m_legal_color = 0.30;
 var m_tabloid = 0.10;
 var m_tabloid_color = 0.40;
-var m_duplex = 1;
-var m_color_paper = 0.05;
+
 var m_front_cover = 0.05;
 var m_front_cover_color = 0.25;
 var m_back_cover = 0.05;
 var m_back_cover_color = 0.25;
-var m_three_hole = 0.02;
-var m_staple = 0.02;
 var m_cut = 0.75;
 
 var m_str_dup_cost_info = "";
@@ -695,7 +692,6 @@ function paperSizeCost() {
 function duplexValue() {
     var duplex_id = $('#duplex').val();
     if (duplex_id === "2") {
-        m_duplex = 2;
         m_letter = 0.025;
         m_letter_color = 0.195;
         m_legal = 0.055;
@@ -704,7 +700,6 @@ function duplexValue() {
         m_tabloid_color = 0.395;
     }
     else {
-        m_duplex = 1;
         m_letter = 0.03;
         m_letter_color = 0.20;
         m_legal = 0.06;
@@ -719,7 +714,6 @@ function paperColorCost() {
     if (paper_color_id !== "1") {
         var duplex_id = $('#duplex').val();
         if (duplex_id === "2") {
-            m_duplex = 2;
             m_letter = 0.025 + 0.03;
             m_letter_color = 0.195 + 0.03;
             m_legal = 0.055 + 0.03;
@@ -728,7 +722,6 @@ function paperColorCost() {
             m_tabloid_color = 0.395 + 0.03;
         }
         else {
-            m_duplex = 1;
             m_letter = 0.03 + 0.03;
             m_letter_color = 0.20 + 0.03;
             m_legal = 0.06 + 0.03;
