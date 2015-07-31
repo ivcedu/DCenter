@@ -61,6 +61,10 @@ window.onload = function() {
     }
 };
 
+window.onbeforeunload = function (event) {
+    db_updatePrintRequestLocked(print_request_id, false);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 function getURLParameters() {
     var searchStr = location.search;
