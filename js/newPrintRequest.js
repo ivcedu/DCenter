@@ -53,6 +53,10 @@ window.onload = function() {
     }
 };
 
+window.onbeforeunload = function (event) {
+    db_updatePrintRequestLocked(print_request_id, false);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {     
     $('#nav_home').click(function() {
