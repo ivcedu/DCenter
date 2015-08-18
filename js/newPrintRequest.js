@@ -286,13 +286,11 @@ function formValidation() {
     if ($('#device_type').val() === "Select...") {
         err += "Divice type is a required field\n";
     }
-    if (m_base64_data === "") {
+    if (m_total_page === "") {
         err += "Attachment is a required field\n";
     }
-    else {
-        if (m_base64_data.indexOf("data:application/pdf;base64") === -1) {
-            err += "Your PDF file are not correctly formatted. please verify your pdf file again";
-        }
+    if (m_total_page === 0) {
+        err += "Your PDF file are not correctly formatted. please verify your pdf file again\n";
     }
 
     return err;
