@@ -86,7 +86,6 @@ $(document).ready(function() {
     
     // file change event ///////////////////////////////////////////////////////
     $('#attachment_file').change(function() { 
-        convertPDFtoBase64();
         getPDFAttachmentInfo();
     });
     
@@ -292,7 +291,7 @@ function formValidation() {
     }
     else {
         if (m_base64_data.indexOf("data:application/pdf;base64") === -1) {
-            err += "Your PDF file are not formatted correctly. please verify your pdf file again";
+            err += "Your PDF file are not correctly formatted. please verify your pdf file again";
         }
     }
 
