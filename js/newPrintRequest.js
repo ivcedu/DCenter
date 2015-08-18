@@ -86,6 +86,7 @@ $(document).ready(function() {
     
     // file change event ///////////////////////////////////////////////////////
     $('#attachment_file').change(function() { 
+        convertPDFtoBase64();
         getPDFAttachmentInfo();
     });
     
@@ -286,8 +287,13 @@ function formValidation() {
     if ($('#device_type').val() === "Select...") {
         err += "Divice type is a required field\n";
     }
-    if ($('#attachment_file').val().replace(/\s+/g, '') === "") {
+    if (m_base64_data === "") {
         err += "Attachment is a required field\n";
+    }
+    else {
+        if (m_base64_data.indexOf("data:application/pdf;base64") === -1) {
+            err += "Your PDF file are not formatted correctly. please verify your pdf file again";
+        }
     }
 
     return err;
@@ -568,10 +574,12 @@ function getPDFAttachmentInfo() {
     var file = $('#attachment_file').get(0).files[0];
     var f_name = file.name.replace(/#/g, "");
     
-    if (typeof file !== "undefined") {
+    if (typeof file !== "undefined") { 
         var f_extension = getFileExtension(f_name);
         if (f_extension !== "pdf") {
             alert("Only PDF file can be upload");
+            $('#attachment_file').filestyle('clear');
+            $('#pdf_pages').val("");
             return false;
         } 
         else {   
