@@ -212,6 +212,7 @@ $(document).ready(function() {
         var err = formValidation();
         if (err !== "") {
             alert(err);
+            $('#btn_submit').prop('disabled', false);
             return false;
         }
         else {
@@ -219,6 +220,7 @@ $(document).ready(function() {
                 var err_1 = plotterValidation();
                 if (err_1 !== "") {
                     alert(err_1);
+                    $('#btn_submit').prop('disabled', false);
                     return false;
                 }
             }
@@ -226,6 +228,7 @@ $(document).ready(function() {
                 var err_2 = duplicatingValidation();
                 if (err_2 !== "") {
                     alert(err_2);
+                    $('#btn_submit').prop('disabled', false);
                     return false;
                 }
             }
@@ -290,6 +293,8 @@ function formValidation() {
         err += "Attachment is a required field\n";
     }
     if (m_total_page === 0) {
+        $('#attachment_file').filestyle('clear');
+        $('#pdf_pages').val("");
         err += "Your PDF file are not correctly formatted. please verify your pdf file again\n";
     }
 
