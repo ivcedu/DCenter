@@ -16,11 +16,12 @@ var m_back_cover_color = 0.25;
 var m_cut = 0.75;
 
 var m_str_dup_cost_info = "";
-var m_total_page = "";
+var m_total_page = 0;
 var m_department_id = "";
 
 var m_file_name = "";
 var m_base64_data = "";
+var m_file_attached = false;
 
 var target;
 var spinner;
@@ -289,10 +290,11 @@ function formValidation() {
     if ($('#device_type').val() === "Select...") {
         err += "Divice type is a required field\n";
     }
-    if (m_total_page === "") {
+    if (!m_file_attached) {
         err += "Attachment is a required field\n";
     }
     if (m_total_page === 0) {
+        m_file_attached = false;
         $('#attachment_file').filestyle('clear');
         $('#pdf_pages').val("");
         err += "Your PDF file are not correctly formatted. please verify your pdf file again\n";
@@ -580,6 +582,7 @@ function getPDFAttachmentInfo() {
         var f_extension = getFileExtension(f_name);
         if (f_extension !== "pdf") {
             alert("Only PDF file can be upload");
+            m_file_attached = false;
             $('#attachment_file').filestyle('clear');
             $('#pdf_pages').val("");
             return false;
@@ -587,6 +590,7 @@ function getPDFAttachmentInfo() {
         else {   
             if (file.size >= 5000000) {
                 alert("Attached file size is too big, max. file size allow is 5Mb or less");
+                m_file_attached = false;
                 $('#attachment_file').filestyle('clear');
                 $('#pdf_pages').val("");
                 return false;
@@ -614,6 +618,7 @@ function convertPDFtoBase64() {
     
     reader.onloadend = function () {
         m_base64_data = reader.result;
+        m_file_attached = true;
     };
 
     if (file) {
@@ -623,6 +628,7 @@ function convertPDFtoBase64() {
 
 function addPDFAttachment(print_request_id) {    
     db_insertAttachment(print_request_id, m_file_name, m_total_page, m_base64_data);
+    
     $('#attachment_file').filestyle('clear');
 }
 

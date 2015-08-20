@@ -17,7 +17,7 @@ var m_back_cover_color = 0.25;
 var m_cut = 0.75;
 
 var m_str_dup_cost_info = "";
-var m_total_page = "";
+var m_total_page = 0;
 var m_department_id = "";
 
 var print_request_id = "";
@@ -138,7 +138,6 @@ $(document).ready(function() {
         var result = new Array();
         result = db_getAttachment(print_request_id);
         if (result.length === 1) {
-//            deleteAttachFile(result[0]['FileLinkName']);
             db_deleteAttachment(print_request_id);
             m_file_deleted = true;
             $('#delete_file_section').hide();
@@ -407,9 +406,13 @@ function formValidation() {
         err += "Divice type is a required field\n";
     }
     if (m_file_deleted) {
-        if ($('#attachment_file').val().replace(/\s+/g, '') === "") {
-            err += "Attachment is a required field\n";
-        }
+        err += "Attachment is a required field\n";
+    }
+    if (m_total_page === 0) {
+        m_file_deleted = true;
+        $('#attachment_file').filestyle('clear');
+        $('#pdf_pages').val("");
+        err += "Your PDF file are not correctly formatted. please verify your pdf file again\n";
     }
     
     return err;
@@ -842,6 +845,8 @@ function getPDFAttachmentInfo() {
         var f_extension = getFileExtension(f_name);
         if (f_extension !== "pdf") {
             alert("Only PDF file can be upload");
+            $('#attachment_file').filestyle('clear');
+            $('#add_pdf_pages').val("");
             return false;
         } 
         else {   
