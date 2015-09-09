@@ -850,8 +850,8 @@ function getPDFAttachmentInfo() {
             return false;
         } 
         else {   
-            if (file.size >= 5000000) {
-                alert("Attached file size is too big, max. file size allow is 5Mb or less");
+            if (file.size >= 10000000) {
+                alert("Attached file size is too big, max. file size allow is 10Mb or less");
                 $('#attachment_file').filestyle('clear');
                 $('#add_pdf_pages').val("");
                 return false;
