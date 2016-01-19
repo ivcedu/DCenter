@@ -7,8 +7,7 @@ var admin_open = false;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
-        var html5pdf = require(['html5-to-pdf']);
-        
+//        var html5pdf = require(['html5-to-pdf']);
         $('#depart_section').hide();
         
         getURLParameters();
