@@ -141,10 +141,7 @@ $(document).ready(function() {
         var result = new Array();
         result = db_getAttachment(print_request_id);
         
-        if (result.length === 1) {
-//            var url_pdf = "attach_files/" + result[0]['FileLinkName'];
-//            window.open(url_pdf, '_blank');
-            
+        if (result.length === 1) {            
             var file_link_name = result[0]['FileLinkName'];
             var file_name = result[0]['FileName'];
             var pdf_data = result[0]['PDFData'];
@@ -160,7 +157,26 @@ $(document).ready(function() {
                 }
                 else {
                     window.open(pdf_data, '_blank');
+                }
             }
+        }
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////
+    $('#btn_download').click(function() {
+        var result = new Array();
+        result = db_getAttachment(print_request_id);
+        
+        if (result.length === 1) {            
+            var file_name = result[0]['FileName'];
+            var pdf_data = result[0]['PDFData'];
+            
+            if (pdf_data === "") {
+                return false;
+            }
+            else {
+                var blob = b64toBlob(pdf_data, 'application/pdf');
+                window.saveAs(blob, file_name);
             }
         }
     });
