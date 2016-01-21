@@ -599,15 +599,20 @@ function getPDFAttachmentInfo() {
                 var file_data = new FormData();
                 file_data.append("files[]", file, f_name); 
                 m_total_page = pdfGetTotalPages(file_data);
-                $('#pdf_pages').html(m_total_page);
-                calculateDupTotalCost();
-                convertPDFtoBase64();
-                return true;
+                if (m_total_page === 0) {
+                    return false;
+                }
+                else {
+                    $('#pdf_pages').html(m_total_page);
+                    calculateDupTotalCost();
+                    convertPDFtoBase64();
+                    return true;
+                }
             }
         }
     }
     else {
-        return true;
+        return false;
     }
 }
 
