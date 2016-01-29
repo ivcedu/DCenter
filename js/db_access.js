@@ -393,11 +393,12 @@ function db_getAdminPrintRequestList() {
     return result;
 }
 
-function db_getAdminCompletedList() {
+function db_getAdminCompletedList(StartDate, EndDate) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getAdminCompletedList.php",
+        data:{StartDate:StartDate, EndDate:EndDate},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -496,6 +497,48 @@ function db_getReceipt(PrintRequestID) {
         type:"POST",
         url:"php/db_getReceipt.php",
         data:{PrintRequestID:PrintRequestID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getBillingReportDepartment(StartDate, EndDate) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getBillingReportDepartment.php",
+        data:{StartDate:StartDate, EndDate:EndDate},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getBillingReportUsers(StartDate, EndDate, DepartmentID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getBillingReportUsers.php",
+        data:{StartDate:StartDate, EndDate:EndDate, DepartmentID:DepartmentID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getBillingReportPrint(StartDate, EndDate, DepartmentID, LoginID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getBillingReportPrint.php",
+        data:{StartDate:StartDate, EndDate:EndDate, DepartmentID:DepartmentID, LoginID:LoginID},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);

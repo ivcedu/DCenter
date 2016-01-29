@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
+        getDefaultStartEndDate();
         getAdminCompletedList();
         initializeTable();
     }
@@ -11,7 +12,7 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function initializeTable() {
-    $("#tbl_print").tablesorter({ });
+    $("#tbl_complete_list").tablesorter({ });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,13 +26,30 @@ $(document).ready(function() {
         window.open('Login.html', '_self');
     });
     
+    // refresh button click ////////////////////////////////////////////////////
+    $('#btn_refresh').click(function() {
+        var start_date = $('#start_date').val();
+        var end_date = $('#end_date').val();
+        
+        if (start_date === "" || end_date === "") {
+            alert("Please select Start and End date");
+        }
+        else {
+            getAdminCompletedList();
+            $('#tbl_complete_list').trigger("update");
+        }
+        
+        return false;
+    });
+    
     // table row contract click ////////////////////////////////////////////////
-    $('table').on('click', 'a', function(e) {
+    $('table').on('click', '[id^="print_request_id_"]', function(e) {
         e.preventDefault();
         var currentId = $(this).attr('id');
         var print_request_id = currentId.replace("print_request_id_", "");
         
         window.open('printRequest.html?print_request_id=' + print_request_id, '_self');
+        return false;
     });
     
     // table delete button click ///////////////////////////////////////////////
@@ -45,17 +63,29 @@ $(document).ready(function() {
             deleteAttachFile(result[0]['FileLinkName']);
             db_deletePrintRequest(print_request_id);
             getAdminCompletedList();
-            initializeTable();
+            $('#tbl_complete_list').trigger("update");
         }
     });
+    
+    // datepicker
+    $('#start_date').datepicker();
+    $('#end_date').datepicker();
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getDefaultStartEndDate() {
+    $('#start_date').val(getCurrentFirstDayOfMonth());
+    $('#end_date').val(getCurrentLastDayOfMonth());
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function getAdminCompletedList() {
     var result = new Array(); 
-    result = db_getAdminCompletedList();
+    result = db_getAdminCompletedList($('#start_date').val(), $('#end_date').val());
     
     $("#body_tr").empty();
+    var body_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
             var modified = convertDBDateToString(result[i]['Modified']);
@@ -69,30 +99,29 @@ function getAdminCompletedList() {
                 status = result[i]['JobStatusDup'];
                 total = formatDollar(Number(result[i]['DupTotalCost']), 2);
             }
-            setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['Requestor'], result[i]['DeviceType'], status, modified, total);
+            body_html += setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['Requestor'], result[i]['DeviceType'], status, modified, total);
         }
     }
-    
-    $("#tbl_print").trigger("update");
+    $("#body_tr").append(body_html);
 }
 
 function setAdminCompletedListHTML(print_request_id, request_title, requestor, device_type, job_status, modified, total) {   
     var tbl_html = "<tr>";
-    tbl_html += "<td class='span2'><a href=# id='print_request_id_" + print_request_id +  "'>" + request_title + "</a></td>";
+    tbl_html += "<td class='span4'><a href=# id='print_request_id_" + print_request_id +  "'>" + request_title + "</a></td>";
     tbl_html += "<td class='span2'>" + requestor + "</td>";
     tbl_html += "<td class='span2'>" + device_type + "</td>";
     tbl_html += "<td class='span2'>" + job_status + "</td>";
-    tbl_html += "<td class='span2'>" + modified + "</td>";
-    tbl_html += "<td class='span2'>" + total + "</td>";
+    tbl_html += "<td class='span1'>" + modified + "</td>";
+    tbl_html += "<td class='span1'>" + total + "</td>";
     if (job_status === "Cancel") {
-        tbl_html += "<td class='span1' style='padding: 0;'><button class='btn btn-mini span12' id='request_cancel_" + print_request_id + "'><i class='icon-trash icon-black'></i></button></td>";
+        tbl_html += "<td class='span1' style='text-align: center'><a href=# id='request_cancel_" + print_request_id + "'><i class='icon-trash icon-black'></i></a></td>";
     }
     else {
         tbl_html += "<td class='span1'></td>";
     }
     tbl_html += "</tr>";
     
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

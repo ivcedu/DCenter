@@ -22,6 +22,7 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href=# id="nav_completed_list">Completed List</a></li>
+                                <li><a href=# id="nav_billing_report">Billing Report</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -31,20 +32,21 @@
                 </div>
             </div>
             
-            <!-- contract list  -->
-            <div class="row-fluid" style="padding-bottom: 10px;">
-                <div class="text-center" style="background-color: gray; color: white; height: 20px;">Administrator Print Request List</div>
-            </div>
+            <!-- print request list  -->
             <div class="row-fluid">
-                <table class="table" id="tbl_print">
-                    <thead id="head_tr" style="border-bottom: 2px solid;">
+                <h4 style="text-align: center;">Administrator Print Request List</h4>
+            </div>
+            <br>
+            <div class="row-fluid">
+                <table class="table table-condensed table-bordered" style="font-size: 90%;" id="tbl_print">
+                    <thead style="background-color: grey;">
                         <tr>
-                            <th class="span2"><a href="#">Request Title</a></th>
-                            <th class="span2"><a href="#">Requestor</a></th>
-                            <th class="span2"><a href="#">Device Type</a></th>
-                            <th class="span2"><a href="#">Status</a></th>
-                            <th class="span2"><a href="#">Created</a></th>
-                            <th class="span2"><a href="#">Total Value</a></th>
+                            <th class="span3"><a href="#" style="color: white;">Request Title</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Requestor</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Device Type</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Status</a></th>
+                            <th class="span1"><a href="#" style="color: white;">Created</a></th>
+                            <th class="span2" style="text-align: right;"><a href="#" style="color: white;">Total Value</a></th>
                         </tr>
                     </thead>
                     <tbody id="body_tr">
