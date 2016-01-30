@@ -74,34 +74,33 @@ $(document).ready(function() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function getDefaultStartEndDate() {
-    $('#start_date').val(getCurrentFirstDayOfMonth());
-    $('#end_date').val(getCurrentLastDayOfMonth());
+function getDefaultStartEndDate() {    
+    $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
+    $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function getAdminCompletedList() {
+function getAdminCompletedList() {    
     var result = new Array(); 
     result = db_getAdminCompletedList($('#start_date').val(), $('#end_date').val());
     
     $("#body_tr").empty();
     var body_html = "";
-    if (result.length !== 0) {
-        for(var i = 0; i < result.length; i++) { 
-            var modified = convertDBDateToString(result[i]['Modified']);
-            var status = "";
-            var total = "";
-            if (result[i]['DeviceTypeID'] === "1") {
-                status = result[i]['JobStatusPlot'];
-                total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
-            }
-            else {
-                status = result[i]['JobStatusDup'];
-                total = formatDollar(Number(result[i]['DupTotalCost']), 2);
-            }
-            body_html += setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['Requestor'], result[i]['DeviceType'], status, modified, total);
+    for(var i = 0; i < result.length; i++) { 
+        var modified = convertDBDateToString(result[i]['Modified']);
+        var status = "";
+        var total = "";
+        if (result[i]['DeviceTypeID'] === "1") {
+            status = result[i]['JobStatusPlot'];
+            total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
         }
+        else {
+            status = result[i]['JobStatusDup'];
+            total = formatDollar(Number(result[i]['DupTotalCost']), 2);
+        }
+        body_html += setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['Requestor'], result[i]['DeviceType'], status, modified, total);
     }
+    
     $("#body_tr").append(body_html);
 }
 

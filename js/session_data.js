@@ -111,14 +111,22 @@ function getCurrentFirstDayOfMonth() {
     var cur_date = new Date();
     var dt_firstDay = new Date(cur_date.getFullYear(), cur_date.getMonth(), 1);
 
-    return dt_firstDay.toLocaleDateString();
+    var yrs = dt_firstDay.getFullYear();
+    var mon = dt_firstDay.getMonth() + 1;
+    var day = dt_firstDay.getDate();
+    
+    return mon + "/" + day + "/" + yrs;
 }
 
 function getCurrentLastDayOfMonth() {
     var cur_date = new Date();
     var dt_lastDay = new Date(cur_date.getFullYear(), cur_date.getMonth() + 1, 0);
-
-    return dt_lastDay.toLocaleDateString();
+    
+    var yrs = dt_lastDay.getFullYear();
+    var mon = dt_lastDay.getMonth() + 1;
+    var day = dt_lastDay.getDate();
+    
+    return mon + "/" + day + "/" + yrs;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
