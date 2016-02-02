@@ -89,6 +89,7 @@ function getAdminPrintList() {
     }
     
     $("#body_tr").append(body_html);
+    $("#tbl_print").trigger("update");
 }
 
 function setAdminPrintListHTML(print_request_id, request_title, requestor, device_type, job_status, created, total) {   

@@ -153,6 +153,7 @@ function getUserPrintList() {
     }
     
     $("#body_tr").append(body_html);
+    $("#tbl_print").trigger("update");
     $('#total_cost').html(formatDollar(total_cost, 2));
 }
 

@@ -102,6 +102,7 @@ function getAdminCompletedList() {
     }
     
     $("#body_tr").append(body_html);
+    $("#tbl_complete_list").trigger("update");
 }
 
 function setAdminCompletedListHTML(print_request_id, request_title, requestor, device_type, job_status, modified, total) {   

@@ -91,7 +91,6 @@ function loginInfo() {
 //    }
     
     if (result.length === 0) {
-//        alert("Login error: There was an error getting login user information from Active Direcy please try again");
         return false;
     }
     else {

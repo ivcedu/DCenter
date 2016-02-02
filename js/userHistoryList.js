@@ -76,6 +76,7 @@ function getUserHistoryList() {
     }
     
     $("#body_tr").append(body_html);
+    $("#tbl_my_history_report").trigger("update");
     $('#total_cost').html(formatDollar(total_cost, 2));
 }
 

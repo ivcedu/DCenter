@@ -97,6 +97,7 @@ function getAdminList() {
     }
     
     $("#body_tr").append(body_html);
+    $("#tbl_user_access_list").trigger("update");
 }
 
 function setAdminListHTML(admin_id, admin_name, admin_email, admin_level) {   

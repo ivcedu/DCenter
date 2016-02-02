@@ -142,6 +142,7 @@ function getBillingReportDepartment() {
         body_html += setBillingReportDepartmentHTML(result[i]['DepartmentID'], result[i]['Department'], result[i]['TotalPages'], formatDollar(Number(result[i]['TotalCost']), 2));
     }
     $("#body_tr").append(body_html);
+    $("#tbl_billing_report").trigger("update");
     
     $('#total_pages').html(m_total_pages);
     $('#total_cost').html(formatDollar(m_total_cost, 2));
@@ -170,6 +171,7 @@ function getBillingReportUsers(depart_id) {
         body_html += setBillingReportUsersHTML(depart_id, result[i]['LoginID'], result[i]['Requestor'], result[i]['TotalPages'], formatDollar(Number(result[i]['TotalCost']), 2));
     }
     $("#first_child_depart_id_" + depart_id).after(body_html);
+    $("#tbl_billing_report").trigger("update");
 }
 
 function setBillingReportUsersHTML(depart_id, login_id, requestor, total_pages, total_cost) {
@@ -196,6 +198,7 @@ function getBillingReportPrint(depart_id, user_id) {
                                                 convertDBDateToString(result[i]['Modified']), result[i]['TotalPages'], formatDollar(Number(result[i]['TotalCost']), 2));
     }
     $("#second_child_user_id_" + user_id).after(body_html);
+    $("#tbl_billing_report").trigger("update");
 }
 
 function setBillingReportPrintHTML(user_id, print_request_id, request_title, modified, total_pages, total_cost) {
