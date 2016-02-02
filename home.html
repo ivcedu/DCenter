@@ -18,7 +18,13 @@
                         <li><a href=# id="nav_new_print"><i class="icon-pencil icon-white"></i> New Print Request</a></li>
                     </ul>
                     <ul class="nav">
-                        <li><a href=# id="nav_history"><i class="icon-book icon-white"></i> History</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href=# id="nav_history">My History</a></li>
+                                <li><a href=# id="nav_billing_report">Copier Report</a></li>
+                            </ul>
+                        </li>
                     </ul>
                     <ul class="nav pull-right">
                         <li><a href=# id="nav_logout"><i class="icon-share icon-white"></i> Logout</a></li>
@@ -35,14 +41,46 @@
             <!-- header -->
             <div class="row-fluid">
                 <div class="span4 offset4 text-center"><a href=# id="user_profile"><h4 id="logn_name"></h4></a></div>
+                <!--
                 <div class="span2 text-right" style="padding-top: 15px; font-weight: bold;">Total Cost:</div>
                 <div class="span2 text-right" style="padding-top: 15px; font-weight: bold;" id="total_cost"></div>
+                -->
             </div>
             
             <!-- contract list  -->
+            <!--
             <div class="row-fluid" style="padding-bottom: 10px;">
                 <div class="text-center" style="background-color: gray; color: white; height: 20px;">Print Request List</div>
             </div>
+            
+            <!-- print request list  -->
+            <!--
+            <div class="row-fluid">
+                <h4 style="text-align: center;">Print Request List</h4>
+            </div>
+            <br>
+            -->
+            <div class="row-fluid" style="font-weight: bold;">
+                <div class="span2 offset8">Total Cost:</div>
+                <div class="span2" style="text-align: right; color: blue;" id="total_cost"></div>
+            </div>
+            <div class="row-fluid">
+                <table class="table table-condensed table-bordered" style="font-size: 90%;" id="tbl_print">
+                    <thead style="background-color: grey;">
+                        <tr>
+                            <th class="span3"><a href="#" style="color: white;">Request Title</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Device Type</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Status</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Created</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Total Value</a></th>
+                            <th class="span1"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="body_tr">
+                    </tbody>
+                </table>
+            </div>
+            <!--
             <div class="row-fluid">
                 <table class="table" id="tbl_print">
                     <thead id="head_tr" style="border-bottom: 2px solid;">
@@ -59,6 +97,7 @@
                     </tbody>
                 </table>
             </div>
+            -->
         </div>
 
         <!-- include javascript -->

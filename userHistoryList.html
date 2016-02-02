@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <meta http-equiv="Cache-Control" content="no-cache"/>
-        <title>History List</title>
+        <title>My History Report</title>
         <!-- include css -->
         <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
@@ -23,26 +23,20 @@
                 </div>
             </div>
             
-            <!-- header -->
+            <!-- my history report  -->
             <div class="row-fluid">
-                <div class="span2 text-right offset8" style="padding-top: 5px; font-weight: bold;">Total Cost:</div>
-                <div class="span2 text-right" style="padding-top: 5px; font-weight: bold;" id="total_cost"></div>
+                <h4 style="text-align: center;">My History Report</h4>
             </div>
-            
-            <!-- contract list  -->
-            <div class="row-fluid" style="padding-bottom: 10px;">
-                <div class="text-center" style="background-color: gray; color: white; height: 20px;">History List</div>
-            </div>
+            <br>
             <div class="row-fluid">
-                <table class="table" id="tbl_print">
-                    <thead id="head_tr" style="border-bottom: 2px solid;">
+                <table class="table table-condensed table-bordered" style="font-size: 90%;" id="tbl_my_history_report">
+                    <thead style="background-color: grey;">
                         <tr>
-                            <th class="span4"><a href="#">Request Title</a></th>
-                            <th class="span2"><a href="#">Device Type</a></th>
-                            <th class="span2"><a href="#">Status</a></th>
-                            <th class="span2"><a href="#">Completed</a></th>
-                            <th class="span2"><a href="#">Total Value</a></th>
-                            <th class="span1"></th>
+                            <th class="span4"><a href="#" style="color: white;">Request Title</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Device Type</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Status</a></th>
+                            <th class="span2"><a href="#" style="color: white;">Completed</a></th>
+                            <th class="span2" style="text-align: right;"><a href="#" style="color: white;">Total Value</a></th>
                         </tr>
                     </thead>
                     <tbody id="body_tr">

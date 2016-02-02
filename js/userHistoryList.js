@@ -11,7 +11,7 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function initializeTable() {
-    $("#tbl_print").tablesorter({ });
+    $("#tbl_my_history_report").tablesorter({ });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,26 +57,25 @@ function getUserHistoryList() {
     
     var total_cost = 0.0;
     $("#body_tr").empty();
-    if (result.length !== 0) {
-        for(var i = 0; i < result.length; i++) { 
-            var modified = convertDBDateToString(result[i]['Modified']);
-            var status = "";
-            var total = "";
-            if (result[i]['DeviceTypeID'] === "1") {
-                status = result[i]['JobStatusPlot'];
-                total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
-                total_cost += Number(result[i]['PlotTotalCost']);
-            }
-            else {
-                status = result[i]['JobStatusDup'];
-                total = formatDollar(Number(result[i]['DupTotalCost']), 2);
-                total_cost += Number(result[i]['DupTotalCost']);
-            }
-            setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['DeviceType'], status, modified, total);
+    var body_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        var modified = convertDBDateToString(result[i]['Modified']);
+        var status = "";
+        var total = "";
+        if (result[i]['DeviceTypeID'] === "1") {
+            status = result[i]['JobStatusPlot'];
+            total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
+            total_cost += Number(result[i]['PlotTotalCost']);
         }
+        else {
+            status = result[i]['JobStatusDup'];
+            total = formatDollar(Number(result[i]['DupTotalCost']), 2);
+            total_cost += Number(result[i]['DupTotalCost']);
+        }
+        body_html += setAdminCompletedListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['DeviceType'], status, modified, total);
     }
     
-    $("#tbl_print").trigger("update");
+    $("#body_tr").append(body_html);
     $('#total_cost').html(formatDollar(total_cost, 2));
 }
 
@@ -86,14 +85,8 @@ function setAdminCompletedListHTML(print_request_id, request_title, device_type,
     tbl_html += "<td class='span2'>" + device_type + "</td>";
     tbl_html += "<td class='span2'>" + job_status + "</td>";
     tbl_html += "<td class='span2'>" + modified + "</td>";
-    tbl_html += "<td class='span2'>" + total + "</td>";
-    if (job_status === "Cancel") {
-        tbl_html += "<td class='span1' style='padding: 0;'><button class='btn btn-mini span12' id='request_cancel_" + print_request_id + "'><i class='icon-trash icon-black'></i></button></td>";
-    }
-    else {
-        tbl_html += "<td class='span1'></td>";
-    }
+    tbl_html += "<td class='span2' style='text-align: right;'>" + total + "</td>";
     tbl_html += "</tr>";
     
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

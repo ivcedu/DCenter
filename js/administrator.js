@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
+        $('#nav_user_access').hide();
+        setUserAccessOption();
         getAdminPrintList();
         initializeTable();
 }
@@ -18,6 +20,11 @@ function initializeTable() {
 $(document).ready(function() { 
     $('#nav_home').click(function() {
         window.open('home.html', '_self');
+        return false;
+    });
+    
+    $('#nav_user_access').click(function() {
+        window.open('userAccess.html', '_self');
         return false;
     });
     
@@ -47,6 +54,17 @@ $(document).ready(function() {
         return false;
     });
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function setUserAccessOption() {        
+    var login_email = localStorage.getItem("ls_dc_loginEmail");
+    var result = new Array();
+    result = db_getAdminByEmail(login_email);
+    
+    if (result[0]['AdminLevel'] === "Master") {
+        $('#nav_user_access').show();
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function getAdminPrintList() {

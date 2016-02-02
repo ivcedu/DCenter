@@ -20,8 +20,8 @@
             <input type="password" placeholder="password" name="password" id="password"><br>
             <input type="button" value="Login" id="btn_login">
         </div>
-        <div class="footer" id="logn_error">
-            <div>Invalid username or password</div>
+        <div class="footer">
+            <div id="logn_error">Invalid username or password</div>
         </div>
         
         <!-- include javascript -->

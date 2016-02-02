@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
+        $('#nav_billing_report').hide();
         $('#show_admin').hide();
         $('#show_bursar').hide();
         $('#logn_name').html(localStorage.getItem('ls_dc_loginDisplayName'));
@@ -25,29 +26,40 @@ function initializeTable() {
 $(document).ready(function() { 
     $('#nav_new_print').click(function() {
         window.open('newPrintRequest.html', '_self');
+        return false;
     });
     
     $('#nav_history').click(function() {
         window.open('userHistoryList.html', '_self');
+        return false;
+    });
+    
+    $('#nav_billing_report').click(function() {
+        window.open('rptBillingReport.html', '_self');
+        return false;
     });
     
     $('#nav_admin').click(function() {
         window.open('administrator.html', '_self');
+        return false;
     });
     
     $('#nav_bursar').click(function() {
         window.open('bursarOffice.html', '_self');
+        return false;
     });
     
     $('#nav_logout').click(function() {
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     $('#user_profile').click(function() {
         var user_type = localStorage.getItem('ls_dc_loginType');
         if (user_type === "Staff") {
             window.open('userProfile.html', '_self');
+            return false;
         }
     });
     
@@ -95,7 +107,13 @@ function setAdminOption() {
     result = db_getAdminByEmail(login_email);
     
     if (result.length === 1) {
-        $('#show_admin').show();
+        if (result[0]['AdminLevel'] === "Master" || result[0]['AdminLevel'] === "Admin") {
+            $('#nav_billing_report').show();
+            $('#show_admin').show();
+        }
+        else if (result[0]['AdminLevel'] === "Report") {
+            $('#nav_billing_report').show();
+        }
     }
 }
 
@@ -116,26 +134,25 @@ function getUserPrintList() {
     
     var total_cost = 0.0;
     $("#body_tr").empty();
-    if (result.length !== 0) {
-        for(var i = 0; i < result.length; i++) { 
-            var created = convertDBDateToString(result[i]['DTStamp']);
-            var status = "";
-            var total = "";
-            if (result[i]['DeviceTypeID'] === "1") {
-                status = result[i]['JobStatusPlot'];
-                total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
-                total_cost += Number(result[i]['PlotTotalCost']);
-            }
-            else {
-                status = result[i]['JobStatusDup'];
-                total = formatDollar(Number(result[i]['DupTotalCost']), 2);
-                total_cost += Number(result[i]['DupTotalCost']);
-            }
-            setUserPrintListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['DeviceType'], status, created, total);
+    var body_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        var created = convertDBDateToString(result[i]['DTStamp']);
+        var status = "";
+        var total = "";
+        if (result[i]['DeviceTypeID'] === "1") {
+            status = result[i]['JobStatusPlot'];
+            total = formatDollar(Number(result[i]['PlotTotalCost']), 2);
+            total_cost += Number(result[i]['PlotTotalCost']);
         }
+        else {
+            status = result[i]['JobStatusDup'];
+            total = formatDollar(Number(result[i]['DupTotalCost']), 2);
+            total_cost += Number(result[i]['DupTotalCost']);
+        }
+        body_html += setUserPrintListHTML(result[i]['PrintRequestID'], result[i]['RequestTitle'], result[i]['DeviceType'], status, created, total);
     }
     
-    $("#tbl_print").trigger("update");
+    $("#body_tr").append(body_html);
     $('#total_cost').html(formatDollar(total_cost, 2));
 }
 
@@ -153,6 +170,5 @@ function setUserPrintListHTML(print_request_id, request_title, device_type, job_
         tbl_html += "<td class='span1'></td>";
     }
     tbl_html += "</tr>";
-    
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

@@ -297,6 +297,33 @@ function db_getAdminByEmail(LoginEmail) {
     return result;
 }
 
+function db_getAdminByID(AdminID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getAdminByID.php",
+        data:{AdminID:AdminID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getAdminList() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getAdminList.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getBursarByEmail(LoginEmail) {
     var result = new Array();
     $.ajax({
@@ -649,6 +676,20 @@ function db_insertReceipt(PrintRequestID, ReceiptDetail) {
     return ResultID;
 }
 
+function db_insertAdmin(AdminName, AdminEmail, AdminLevel) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertAdmin.php",
+        data:{AdminName:AdminName, AdminEmail:AdminEmail, AdminLevel:AdminLevel},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 // update DB ///////////////////////////////////////////////////////////////////
 function db_updatePrintRequestDevice(PrintRequestID, DeviceTypeID) {
     var Result = false;
@@ -821,6 +862,20 @@ function db_updateReceipt(PrintRequestID, ReceiptDetail) {
     return Result;
 }
 
+function db_updateAdmin(AdminID, AdminName, AdminEmail, AdminLevel) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateAdmin.php",
+        data:{AdminID:AdminID, AdminName:AdminName, AdminEmail:AdminEmail, AdminLevel:AdminLevel},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 // delete DB ///////////////////////////////////////////////////////////////////
 function db_deleteAttachment(PrintRequestID) {
     var Result = false;
@@ -870,6 +925,20 @@ function db_deletePrintRequest(PrintRequestID) {
         type:"POST",
         url:"php/db_deletePrintRequest.php",
         data:{PrintRequestID:PrintRequestID},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_deleteAdmin(AdminID) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_deleteAdmin.php",
+        data:{AdminID:AdminID},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

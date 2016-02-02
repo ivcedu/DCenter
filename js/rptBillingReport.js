@@ -4,6 +4,8 @@ var m_total_cost = 0;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
+        $('#show_admin').hide();
+        setAdminOption();
         getDefaultStartEndDate();
         getBillingReportDepartment();
         initializeTable();
@@ -20,6 +22,11 @@ function initializeTable() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
+    $('#nav_home').click(function() {
+        window.open('home.html', '_self');
+        return false;
+    });
+    
     $('#nav_admin').click(function() {
         window.open('administrator.html', '_self');
         return false;
@@ -105,6 +112,18 @@ $(document).ready(function() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function setAdminOption() {        
+    var login_email = localStorage.getItem("ls_dc_loginEmail");
+    var result = new Array();
+    result = db_getAdminByEmail(login_email);
+    
+    if (result.length === 1) {
+        if (result[0]['AdminLevel'] === "Master" || result[0]['AdminLevel'] === "Admin") {
+            $('#show_admin').show();
+        }
+    }
+}
+
 function getDefaultStartEndDate() {
     $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
     $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
