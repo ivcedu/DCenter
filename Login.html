@@ -21,7 +21,7 @@
             <input type="button" value="Login" id="btn_login">
         </div>
         <div class="footer">
-            <div id="logn_error">Invalid username or password</div>
+            <div id="login_error">Invalid username or password</div>
         </div>
         
         <!-- include javascript -->
