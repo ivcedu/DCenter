@@ -131,6 +131,9 @@ function getDefaultStartEndDate() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function getBillingReportDepartment() {
+    m_total_pages = 0;
+    m_total_cost = 0;
+    
     var result = new Array(); 
     result = db_getBillingReportDepartment($('#start_date').val(), $('#end_date').val());
     
