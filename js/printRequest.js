@@ -22,9 +22,8 @@ window.onload = function() {
         getTransactionHistory();
     }
     else {
-        var url_str = "http://services.ivc.edu/DCenter/printRequest.html" + location.search;
-        sessionStorage.setItem('ss_dc_url_param', url_str);
         window.open('Login.html', '_self');
+        return false;
     }
 };
 

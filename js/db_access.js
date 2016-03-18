@@ -1,3 +1,18 @@
+// LDAP get ////////////////////////////////////////////////////////////////////
+function getLoginUserInfo(php_file, user, pass) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:php_file,
+        data:{username:user, password:pass},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 // get DB //////////////////////////////////////////////////////////////////////
 function db_getDeliveryLocation() {
     var result = new Array();
