@@ -4,7 +4,7 @@
     $StartDate = filter_input(INPUT_POST, 'StartDate');
     $EndDate = filter_input(INPUT_POST, 'EndDate');
     
-    $query = "SELECT prrq.PrintRequestID, prrq.RequestTitle, prrq.Requestor, prrq.Modified, dvtp.DeviceType, jstp.JobStatusPlot, pltt.TotalCost AS PlotTotalCost, jstd.JobStatusDup, dupl.TotalCost AS DupTotalCost "
+    $query = "SELECT prrq.PrintRequestID, prrq.RequestTitle, prrq.Requestor, prrq.Modified, prrq.DeviceTypeID, dvtp.DeviceType, jstp.JobStatusPlot, pltt.TotalCost AS PlotTotalCost, jstd.JobStatusDup, dupl.TotalCost AS DupTotalCost "
             . "FROM [IVCDCENTER].[dbo].[PrintRequest] AS prrq LEFT JOIN [IVCDCENTER].[dbo].[DeviceType] AS dvtp ON prrq.DeviceTypeID = dvtp.DeviceTypeID "
             . "LEFT JOIN [IVCDCENTER].[dbo].[Plotter] AS pltt ON prrq.PrintRequestID = pltt.PrintRequestID "
             . "LEFT JOIN [IVCDCENTER].[dbo].[JobStatusPlot] AS jstp ON pltt.JobStatusPlotID = jstp.JobStatusPlotID "
