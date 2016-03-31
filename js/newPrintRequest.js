@@ -899,7 +899,7 @@ function sendEmailPlotterHonorNotification() {
     message += "Request Title: " + $('#request_title').val() + "<br>";
     message += "Paper Type: " + db_getPaperTypeName($('#paper_type').val()) + "<br>";
     message += "Size: " + $('#size_height').val() + " x " + $('#size_width').val() + "<br>";
-    message += "Total Cost: " + $('#plot_total_cost').val() + " <strong>Free of Charge</strong><br>";
+    message += "Total Cost: " + $('#plot_total_cost').val() + " <strong>Free of Charge</strong><br><br>";
     message += "Thank you.<br>";
     
     proc_sendEmail(email, name, subject, message);
@@ -917,7 +917,7 @@ function sendEmailDuplicatingRequestor(print_request_id) {
     message += "Request Title: " + $('#request_title').val() + "<br>";
     message += "Date Needed: " + $('#date_needed').val() + " " + $('#time_needed').val() + "<br>";
     message += "Quantity: " + $('#quantity').val() + "<br>";
-    message += "Department: " + $('#department').val() + "<br>";
+    message += "Department: " + $('#department').val() + "<br><br>";
     
     message += "Please use the link below to review the status of your submission at any time.<br><br>";
 
@@ -947,7 +947,7 @@ function sendEmailDuplicatingAdmin(print_request_id) {
     message += "Email: " + $('#email').val() + "<br>";
     message += "Request Title: " + $('#request_title').val() + "<br>";
     message += "Date Needed: " + $('#date_needed').val() + " " + $('#time_needed').val() + "<br>";
-    message += "Quantity: " + $('#quantity').val() + "<br>";
+    message += "Quantity: " + $('#quantity').val() + "<br><br>";
     
     message += "Please use the link below to open request at anytime.<br><br>";
 
