@@ -5,8 +5,8 @@
     $Pages = filter_input(INPUT_POST, 'Pages');
 
     $query = "UPDATE [IVCDCENTER].[dbo].[Attachment] "
-                ."SET Pages = '".$Pages."' "
-                ."WHERE AttachmentID = '".$AttachmentID."'";
+                . "SET Pages = '".$Pages."' "
+                . "WHERE AttachmentID = '".$AttachmentID."'";
     
     $cmd = $dbConn->prepare($query);
     $result = $cmd->execute(); 

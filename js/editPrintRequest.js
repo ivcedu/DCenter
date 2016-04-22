@@ -22,8 +22,9 @@ var m_department_id = "";
 
 var print_request_id = "";
 var m_device = "";
-var m_file_deleted = false;
 
+var m_file_deleted = false;
+var m_edit_attachment = false;
 var m_file_name = "";
 var m_base64_data = "";
 
@@ -133,15 +134,48 @@ $(document).ready(function() {
         window.open('Login.html', '_self');
     });
     
-    // delete file button click ////////////////////////////////////////////////
-    $('#btn_delete_file').click(function() { 
+    // attachment edit button click ////////////////////////////////////////////
+    $('#btn_edit_file').click(function() { 
+        $('#delete_file_section').hide();
+        $('#add_file_section').show();
+        m_edit_attachment = true;
+    });
+    
+    // attachment go back button click //////////////////////////////////////////
+    $('#btn_go_back_file').click(function() { 
+        $('#attachment_file').filestyle('clear');
+        $('#add_pdf_pages').val("");
+        
+        m_edit_attachment = false;
+        m_base64_data = "";
+        
+        $('#delete_file_section').show();
+        $('#add_file_section').hide();
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////
+    $('#pdf_file_name').click(function() {
         var result = new Array();
         result = db_getAttachment(print_request_id);
-        if (result.length === 1) {
-            db_deleteAttachment(print_request_id);
-            m_file_deleted = true;
-            $('#delete_file_section').hide();
-            $('#add_file_section').show();
+        
+        if (result.length === 1) {            
+            var file_link_name = result[0]['FileLinkName'];
+            var file_name = result[0]['FileName'];
+            var pdf_data = result[0]['PDFData'];
+            if (file_link_name !== "") {
+                var url_pdf = "attach_files/" + file_link_name;
+                window.open(url_pdf, '_blank');
+            }
+            else {
+                var curBrowser = bowser.name;
+                if (curBrowser === "Internet Explorer") {
+                    var blob = b64toBlob(pdf_data, 'application/pdf');
+                    saveAs(blob, file_name);
+                }
+                else {
+                    window.open(pdf_data, '_blank');
+                }
+            }
         }
     });
     
@@ -269,67 +303,74 @@ $(document).ready(function() {
     });
     
     // close button click //////////////////////////////////////////////////////
-    $('#btn_close').click(function() { 
-        if (!editFormValidation()) {
-            return false;
-        }
-        
+    $('#btn_close').click(function() {        
         db_updatePrintRequestLocked(print_request_id, false);
         window.open('home.html', '_self');
     });
     
     // cancel button click /////////////////////////////////////////////////////
-    $('#btn_cancel').click(function() { 
-        if (!editFormValidation()) {
-            return false;
-        }
+    $('#btn_cancel').click(function() {
+        swal({ title: "Are you sure?", 
+               text: "You will not be able to recover this print request",
+               type: "warning", 
+               showCancelButton: true, 
+               confirmButtonColor: "#DD6B55", 
+               confirmButtonText: "Yes, cancel it",
+               cancelButtonText: "No, close",
+               closeOnConfirm: false }, 
+               function() {
+                    var device = "";
+                    var device_type_id = $('#device_type').val();
+                    if (device_type_id === "1") {
+                        var result_1 = new Array();
+                        result_1 = db_getPlotter(print_request_id);
+                        if (result_1.length === 1) {
+                            db_updatePlotter(print_request_id, 9);
+                            device = "Plotter";
+                        }
+                        else {
+                            swal("Warning", "Your original request was a Duplicating. Please select Duplicating than click cancel button", "warning");
+                            return false;
+                        }
+                    }
+                    else {
+                        var result_2 = new Array();
+                        result_2 = db_getDuplicating(print_request_id);
+                        if (result_2.length === 1) {
+                            db_updateDuplicating(print_request_id, 6);
+                            device = "Duplicating";
+                        }
+                        else {
+                            swal("Warning", "Your original request was a Plotter. Please select Plotter than click cancel button", "warning");
+                            return false;
+                        }
+                    }
+                    
+                    swal("Canceled!", device + " print request has been canceled", "success");
+               }
+            );
         
-        var device = "";
-        var device_type_id = $('#device_type').val();
-        if (device_type_id === "1") {
-            var result_1 = new Array();
-            result_1 = db_getPlotter(print_request_id);
-            if (result_1.length === 1) {
-                db_updatePlotter(print_request_id, 9);
-                device = "Plotter";
-            }
-            else {
-                alert("Your original request was a Duplicating. Please select Duplicating than click cancel button");
-                return false;
-            }
-        }
-        else {
-            var result_2 = new Array();
-            result_2 = db_getDuplicating(print_request_id);
-            if (result_2.length === 1) {
-                db_updateDuplicating(print_request_id, 6);
-                device = "Duplicating";
-            }
-            else {
-                alert("Your original request was a Plotter. Please select Plotter than click cancel button");
-                return false;
-            }
-        }
-        
-        db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), device + " request has been canceled");
+        db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), device + " print request has been canceled");
         sendEmailCancelAdmin();
-
+            
         db_updatePrintRequestLocked(print_request_id, false);
-        alert(device + " request has been canceled");
+        
         window.open('home.html', '_self');
+        return false;
     });
     
     // save button click ///////////////////////////////////////////////////////
     $('#btn_save').click(function() {   
         $('#btn_save').prop('disabled', true);
         if (!editFormValidation()) {
+            $('#btn_save').prop('disabled', false);
             return false;
         }
         
         startSpin();        
         setTimeout(function() {      
-            if (m_file_deleted) {
-                addPDFAttachment(print_request_id);
+            if (m_edit_attachment) {
+                updatePDFAttachment(print_request_id);
             }
 
             var device = "";
@@ -368,10 +409,17 @@ $(document).ready(function() {
             else {
                 db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), m_device + " request has been changed to " + device);
             }
-
-            db_updatePrintRequestLocked(print_request_id, false);
-            alert("Your request has been changed successfully");
-            window.open('home.html', '_self');
+            
+            stopSpin();
+            swal(   { title: "Success",
+                      text: "Your print request has been changed successfully",
+                      type: "success",
+                      confirmButtonText: "OK" },
+                    function() {
+                        db_updatePrintRequestLocked(print_request_id, false);
+                        window.open('home.html', '_self');
+                        return false; }
+                );
         }, 1000);
     });
     
@@ -405,11 +453,10 @@ function formValidation() {
     if ($('#device_type').val() === "Select...") {
         err += "Divice type is a required field\n";
     }
-    if (m_file_deleted) {
+    if (m_edit_attachment && m_base64_data === "") {
         err += "Attachment is a required field\n";
     }
     if (m_total_page === 0) {
-        m_file_deleted = true;
         $('#attachment_file').filestyle('clear');
         $('#pdf_pages').val("");
         err += "Your PDF file are not correctly formatted. please verify your pdf file again\n";
@@ -450,14 +497,14 @@ function duplicatingValidation() {
 function editFormValidation() {
     var err = formValidation();
     if (err !== "") {
-        alert(err);
+        swal("Validation Error!", err, "error");
         return false;
     }
     else {
         if ($('#device_type').val() === "1") {
             var err_1 = plotterValidation();
             if (err_1 !== "") {
-                alert(err_1);
+                swal("Validation Error!", err_1, "error");
                 return false;
             }
             else {
@@ -467,7 +514,7 @@ function editFormValidation() {
         else {
             var err_2 = duplicatingValidation();
             if (err_2 !== "") {
-                alert(err_2);
+                swal("Validation Error!", err_2, "error");
                 return false;
             }
             else {
@@ -647,11 +694,10 @@ function setAttachment() {
     var result = new Array();
     result = db_getAttachment(print_request_id);
     
-    if (result.length === 1) {    
-        var html = "<a href='attach_files/" + result[0]['FileLinkName'] + "' target='_blank'>" + result[0]['FileName'] + "</a>";
-        $('#delete_file_name').append(html);
+    if (result.length === 1) {        
+        $('#pdf_file_name').html(result[0]['FileName']);
         m_total_page = result[0]['Pages'];
-        $('#delete_pdf_pages').html(m_total_page);
+        $('#previous_pdf_pages').html(m_total_page);
     }
 }
 
@@ -844,14 +890,15 @@ function getPDFAttachmentInfo() {
     if (typeof file !== "undefined") {
         var f_extension = getFileExtension(f_name);
         if (f_extension !== "pdf") {
-            alert("Only PDF file can be upload");
+            swal("Attachment Error!", "Only PDF file can be upload", "error");
+            
             $('#attachment_file').filestyle('clear');
             $('#add_pdf_pages').val("");
             return false;
         } 
         else {   
             if (file.size >= 10000000) {
-                alert("Attached file size is too big, max. file size allow is 10Mb or less");
+                swal("Attachment Error!", "Attached file size is too big, max. file size allow is 10Mb or less", "error");
                 $('#attachment_file').filestyle('clear');
                 $('#add_pdf_pages').val("");
                 return false;
@@ -891,11 +938,10 @@ function convertPDFtoBase64() {
     } 
 }
 
-function addPDFAttachment(print_request_id) {    
-    db_insertAttachment(print_request_id, m_file_name, m_total_page, m_base64_data);
+function updatePDFAttachment(print_request_id) {    
+    db_updateAttachment(print_request_id, m_file_name, m_total_page, m_base64_data);
     $('#attachment_file').filestyle('clear');
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 function calculateDupTotalCost() {
     m_str_dup_cost_info = "";
@@ -903,6 +949,7 @@ function calculateDupTotalCost() {
     var quantity = Number($('#quantity').val());
     var paper_color = $('#paper_color option:selected').text();
     
+    m_str_dup_cost_info += "Original Page: " + m_total_page + "<br/>";
     m_str_dup_cost_info += "Quantity: " + quantity + "<br/>";
     m_str_dup_cost_info += "Paper Color: " + paper_color + "<br/>";
     
@@ -919,7 +966,7 @@ function calculateDupTotalCost() {
     var total_cost = paper_cost * quantity * Number(m_total_page);
     total_cost += front_cover + back_cover + cutCost();
     
-    m_str_dup_cost_info += "<b>Print Cost: " + formatDollar(paper_cost, 3) + "</b>";
+    m_str_dup_cost_info += "<b>Print Cost: " + formatDollar(paper_cost, 3) + "</b><br/>";
     
     $('#dup_cost_info').html(m_str_dup_cost_info.trim());
     $('#dup_total_print').html(quantity * Number(m_total_page));
@@ -1100,9 +1147,9 @@ function sendEmailCancelAdmin() {
     var name = "Jose Delgado";
     var email = "ivcduplicating@ivc.edu";
     
-    var subject = m_device + " request has been canceled";
+    var subject = m_device + " print request has been canceled";
     var message = "Dear " + name + ", <br><br>";
-    message += m_device + " request, title <strong>" + $('#request_title').val() + "</strong> has been canceled<br>";    
+    message += m_device + " print request, title <strong>" + $('#request_title').val() + "</strong> has been canceled from requestor<br>";    
     message += "Please refresh your admin page.<br><br>";
 
     message += "Thank you.<br>";
@@ -1116,9 +1163,9 @@ function sendEmailUpdateAdmin(print_request_id) {
     var name = "Jose Delgado";
     var email = "ivcduplicating@ivc.edu";
     
-    var subject = m_device + " request has been changed";
+    var subject = m_device + " print request has been changed";
     var message = "Dear " + name + ", <br><br>";
-    message += m_device + " request, title <strong>" + $('#request_title').val() + "</strong> has been changed<br>";    
+    message += m_device + " print request, title <strong>" + $('#request_title').val() + "</strong> has been changed<br>";    
     message += "Please refresh your admin page and use the link below to open request at anytime.<br><br>";
 
     message += "<a href='https://services.ivc.edu/DCenter/printRequest.html" + url_param + "'>" + $('#request_title').val() + "</a><br><br>";

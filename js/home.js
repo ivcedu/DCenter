@@ -63,16 +63,18 @@ $(document).ready(function() {
         }
     });
     
-    // table row contract click //////////////////////////////////////////////
-    $('table').on('click', 'a', function(e) {
+    // table row contract click ////////////////////////////////////////////////
+    $('table').on('click', '[id^="print_request_id_"]', function(e) {
         e.preventDefault();
         var currentId = $(this).attr('id');
         var print_request_id = currentId.replace("print_request_id_", "");
         
         window.open('printRequest.html?print_request_id=' + print_request_id, '_self');
+        return false;
     });
     
-    $('table').on('click', '[id^="edit_request_"]', function() {
+    $('table').on('click', '[id^="edit_request_"]', function(e) {
+        e.preventDefault();
         var currentId = $(this).attr('id');
         var print_request_id = currentId.replace("edit_request_", "");
         
@@ -83,6 +85,7 @@ $(document).ready(function() {
         }
         else {
             window.open('editPrintRequest.html?print_request_id=' + print_request_id, '_self');
+            return false;
         }
     });
 });
@@ -165,7 +168,7 @@ function setUserPrintListHTML(print_request_id, request_title, device_type, job_
     tbl_html += "<td class='span2'>" + created + "</td>";
     tbl_html += "<td class='span2'>" + total + "</td>";
     if (job_status === "Queued") {
-        tbl_html += "<td class='span1' style='padding: 0;'><button class='btn btn-mini span12' id='edit_request_" + print_request_id + "'><i class='icon-pencil icon-black'></i></button></td>";
+        tbl_html += "<td class='span1' style='padding-top: 5px; text-align: center;'><a href=# id='edit_request_" + print_request_id + "'><i class='fa fa-edit'></i></td>";
     }
     else {
         tbl_html += "<td class='span1'></td>";

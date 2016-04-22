@@ -790,6 +790,20 @@ function db_updateDepartment(PrintRequestID, DepartmentID) {
     return Result;
 }
 
+function db_updateAttachment(PrintRequestID, FileName, Pages, PDFData) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateAttachment.php",
+        data:{PrintRequestID:PrintRequestID, FileName:FileName, Pages:Pages, PDFData:PDFData},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 function db_updateAttachmentPages(AttachmentID, Pages) {
     var Result = false;
     $.ajax({

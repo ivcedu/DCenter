@@ -102,6 +102,7 @@ $(document).ready(function() {
             db_updatePrintRequestLocked(print_request_id, false);
         }
         window.open('home.html', '_self');
+        return false;
     });
     
     $('#nav_admin').click(function() {
@@ -109,6 +110,7 @@ $(document).ready(function() {
             db_updatePrintRequestLocked(print_request_id, false);
         }
         window.open('administrator.html', '_self');
+        return false;
     });
     
     $('#nav_bursar').click(function() {
@@ -116,10 +118,12 @@ $(document).ready(function() {
             db_updatePrintRequestLocked(print_request_id, false);
         }
         window.open('bursarOffice.html', '_self');
+        return false;
     });
     
     $('#nav_print').click(function() {
         window.print();
+        return false;
     });
     
     $('#nav_logout').click(function() {
@@ -128,6 +132,7 @@ $(document).ready(function() {
         }
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     ////////////////////////////////////////////////////////////////////////////
@@ -144,18 +149,28 @@ $(document).ready(function() {
             var file_link_name = result[0]['FileLinkName'];
             var file_name = result[0]['FileName'];
             var pdf_data = result[0]['PDFData'];
+            
             if (file_link_name !== "") {
                 var url_pdf = "attach_files/" + file_link_name;
                 window.open(url_pdf, '_blank');
+                return false;
             }
             else {
                 var curBrowser = bowser.name;
                 if (curBrowser === "Internet Explorer") {
                     var blob = b64toBlob(pdf_data, 'application/pdf');
-                    window.saveAs(blob, file_name);
+                    saveAs(blob, file_name);
+                    return false;
                 }
                 else {
-                    window.open(pdf_data, '_blank');
+                    if (pdf_data.length < 2200000) {
+                        window.open(pdf_data, '_blank');
+                        return false;
+                    }
+                    else {
+                        swal("Warning", "PDF file is too big to open. please use Download button", "warning");
+                        return false;
+                    }
                 }
             }
         }
@@ -175,7 +190,8 @@ $(document).ready(function() {
             }
             else {
                 var blob = b64toBlob(pdf_data, 'application/pdf');
-                window.saveAs(blob, file_name);
+                saveAs(blob, file_name);
+                return false;
             }
         }
     });

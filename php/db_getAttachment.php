@@ -1,5 +1,6 @@
 <?php
     require("config.php");
+    ini_set('max_execution_time', 0);
 
     $PrintRequestID = filter_input(INPUT_POST, 'PrintRequestID');
     

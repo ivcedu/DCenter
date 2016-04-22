@@ -644,6 +644,7 @@ function calculateDupTotalCost() {
     var quantity = Number($('#quantity').val());
     var paper_color = $('#paper_color option:selected').text();
     
+    m_str_dup_cost_info += "Original Page: " + m_total_page + "<br/>";
     m_str_dup_cost_info += "Quantity: " + quantity + "<br/>";
     m_str_dup_cost_info += "Paper Color: " + paper_color + "<br/>";
     
@@ -660,7 +661,7 @@ function calculateDupTotalCost() {
     var total_cost = paper_cost * quantity * Number(m_total_page);
     total_cost += front_cover + back_cover + cutCost();
     
-    m_str_dup_cost_info += "<b>Print Cost: " + formatDollar(paper_cost, 3) + "</b>";
+    m_str_dup_cost_info += "<b>Print Cost: " + formatDollar(paper_cost, 3) + "</b><br/>";
     
     $('#dup_cost_info').html(m_str_dup_cost_info.trim());
     $('#dup_total_print').html(quantity * Number(m_total_page));
