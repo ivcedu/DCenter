@@ -141,7 +141,7 @@ $(document).ready(function() {
     });
 
     ////////////////////////////////////////////////////////////////////////////
-    $('#attachment_file').click(function() {
+    $('#attachment_file').click(function() {       
         var result = new Array();
         result = db_getAttachment(print_request_id);
         
@@ -180,12 +180,16 @@ $(document).ready(function() {
     $('#btn_download').click(function() {
         var result = new Array();
         result = db_getAttachment(print_request_id);
-        
-        if (result.length === 1) {            
+
+        if (result.length === 1) {
+            var file_link_name = result[0]['FileLinkName'];
             var file_name = result[0]['FileName'];
             var pdf_data = result[0]['PDFData'];
             
-            if (pdf_data === "") {
+            if (pdf_data === null) {
+                var http_location = location.origin;
+                http_location += "/DCenter/attach_files/" + file_link_name;                
+                SaveToDisk(http_location, file_name);      
                 return false;
             }
             else {
@@ -226,6 +230,32 @@ $(document).ready(function() {
     // selectpicker
     $('.selectpicker').selectpicker();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function SaveToDisk(fileURL, fileName) {    
+    var curBrowser = bowser.name;
+    if (curBrowser === "Internet Explorer") {
+        var _window = window.open(fileURL, '_blank');
+        _window.document.close();
+        _window.document.execCommand('SaveAs', true, fileName || fileURL);
+        _window.close();
+    }
+    else {
+        var save = document.createElement('a');
+        save.href = fileURL;
+        save.target = '_blank';
+        save.download = fileName || 'unknown';
+
+        var evt = new MouseEvent('click', {
+            'view': window,
+            'bubbles': true,
+            'cancelable': false
+        });
+        save.dispatchEvent(evt);
+
+        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function duplicatingValidation() {

@@ -8,7 +8,7 @@
     $PDFData = filter_input(INPUT_POST, 'PDFData');
 
     $query = "UPDATE [IVCDCENTER].[dbo].[Attachment] "
-                . "SET FileName = '".$FileName."', Pages = '".$Pages."', PDFData = '".$PDFData."' "
+                . "SET FileLinkName = '', FileName = '".$FileName."', Pages = '".$Pages."', PDFData = '".$PDFData."' "
                 . "WHERE PrintRequestID = '".$PrintRequestID."'";
     
     $cmd = $dbConn->prepare($query);

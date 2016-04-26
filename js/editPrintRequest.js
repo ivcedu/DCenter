@@ -23,10 +23,11 @@ var m_department_id = "";
 var print_request_id = "";
 var m_device = "";
 
-var m_file_deleted = false;
+var m_file_attached = false;
 var m_edit_attachment = false;
-var m_file_name = "";
-var m_base64_data = "";
+var m_file_size = 0;
+//var m_file_name = "";
+//var m_base64_data = "";
 
 var target;
 var spinner;
@@ -147,7 +148,7 @@ $(document).ready(function() {
         $('#add_pdf_pages').val("");
         
         m_edit_attachment = false;
-        m_base64_data = "";
+//        m_base64_data = "";
         
         $('#delete_file_section').show();
         $('#add_file_section').hide();
@@ -181,7 +182,11 @@ $(document).ready(function() {
     
     // file change event ///////////////////////////////////////////////////////
     $('#attachment_file').change(function() { 
-        getPDFAttachmentInfo();
+        startSpin();        
+        setTimeout(function() {      
+            getPDFAttachmentInfo();
+            stopSpin();
+        }, 1000);
     });
     
     // dropdown event //////////////////////////////////////////////////////////
@@ -370,7 +375,21 @@ $(document).ready(function() {
         startSpin();        
         setTimeout(function() {      
             if (m_edit_attachment) {
-                updatePDFAttachment(print_request_id);
+                var result = new Array();
+                result = db_getAttachment(print_request_id);
+                if (result.length === 1) {
+                    deleteAttachFile(result[0]['FileLinkName']);
+                }
+                // hybride store pdf to db and file system
+                db_deleteAttachment(print_request_id);
+                uploadPDFAttachment(print_request_id);
+//                if (m_file_size > 1000000) {
+//                    db_deleteAttachment(print_request_id);
+//                    uploadPDFAttachment(print_request_id);
+//                }
+//                else {
+//                    updatePDFAttachment(print_request_id);
+//                }
             }
 
             var device = "";
@@ -453,7 +472,7 @@ function formValidation() {
     if ($('#device_type').val() === "Select...") {
         err += "Divice type is a required field\n";
     }
-    if (m_edit_attachment && m_base64_data === "") {
+    if (m_edit_attachment && !m_file_attached) {
         err += "Attachment is a required field\n";
     }
     if (m_total_page === 0) {
@@ -865,10 +884,74 @@ function updateDuplicating(print_request_id) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function fileAttachment(print_request_id) {
-    var file = $('#attachment_file').get(0).files[0];    
-    var file_data = new FormData();
+function getPDFAttachmentInfo() {
+    var file = $('#attachment_file').get(0).files[0];
     var f_name = file.name.replace(/#/g, "");
+    m_file_size = file.size;
+    
+    if (typeof file !== "undefined") {
+        var f_extension = getFileExtension(f_name);
+        if (f_extension !== "pdf") {
+            swal("Attachment Error!", "Only PDF file can be upload", "error");
+            m_file_attached = false;
+            $('#attachment_file').filestyle('clear');
+            $('#add_pdf_pages').val("");
+            return false;
+        } 
+        else {   
+            if (m_file_size >= 20000000) {
+                swal("Attachment Error!", "Attached file size is too big, max. file size allow is 20Mb or less", "error");
+                m_file_attached = false;
+                $('#attachment_file').filestyle('clear');
+                $('#add_pdf_pages').val("");
+                return false;
+            }
+            else {
+                var file_data = new FormData();
+                file_data.append("files[]", file, f_name); 
+                m_total_page = pdfGetTotalPages(file_data);
+                if (m_total_page === 0) {
+                    m_file_attached = false;
+                    return false;
+                }
+                else {
+                    m_file_attached = true;
+                    $('#add_pdf_pages').html(m_total_page);
+                    calculateDupTotalCost();
+//                    convertPDFtoBase64();
+                    return true;
+                }
+            }
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+//function convertPDFtoBase64() {
+//    var file = $('#attachment_file').get(0).files[0];
+//    m_file_name = file.name.replace(/#/g, "");
+//    var reader = new FileReader();
+//    
+//    reader.onloadend = function () {
+//        m_base64_data = reader.result;
+//    };
+//
+//    if (file) {
+//        reader.readAsDataURL(file);
+//    } 
+//}
+
+//function updatePDFAttachment(print_request_id) {    
+//    db_updateAttachment(print_request_id, m_file_name, m_total_page, m_base64_data);
+//    $('#attachment_file').filestyle('clear');
+//}
+
+function uploadPDFAttachment(print_request_id) {
+    var file = $('#attachment_file').get(0).files[0];    
+    var file_data = new FormData();  
+    var f_name = file.name.replace(/#/g, "").replace(/'/g, "");
     var php_flname = print_request_id + "_fileIndex_" + f_name;
     file_data.append("files[]", file, php_flname); 
 
@@ -881,66 +964,6 @@ function fileAttachment(print_request_id) {
         db_updateAttachmentPages(attachment_id, pages);
         return true;
     }
-}
-
-function getPDFAttachmentInfo() {
-    var file = $('#attachment_file').get(0).files[0];
-    var f_name = file.name.replace(/#/g, "");
-    
-    if (typeof file !== "undefined") {
-        var f_extension = getFileExtension(f_name);
-        if (f_extension !== "pdf") {
-            swal("Attachment Error!", "Only PDF file can be upload", "error");
-            
-            $('#attachment_file').filestyle('clear');
-            $('#add_pdf_pages').val("");
-            return false;
-        } 
-        else {   
-            if (file.size >= 10000000) {
-                swal("Attachment Error!", "Attached file size is too big, max. file size allow is 10Mb or less", "error");
-                $('#attachment_file').filestyle('clear');
-                $('#add_pdf_pages').val("");
-                return false;
-            }
-            else {
-                var file_data = new FormData();
-                file_data.append("files[]", file, f_name); 
-                m_total_page = pdfGetTotalPages(file_data);
-                if (m_total_page === 0) {
-                    return false;
-                }
-                else {
-                    $('#add_pdf_pages').html(m_total_page);
-                    calculateDupTotalCost();
-                    convertPDFtoBase64();
-                    return true;
-                }
-            }
-        }
-    }
-    else {
-        return false;
-    }
-}
-
-function convertPDFtoBase64() {
-    var file = $('#attachment_file').get(0).files[0];
-    m_file_name = file.name.replace(/#/g, "");
-    var reader = new FileReader();
-    
-    reader.onloadend = function () {
-        m_base64_data = reader.result;
-    };
-
-    if (file) {
-        reader.readAsDataURL(file);
-    } 
-}
-
-function updatePDFAttachment(print_request_id) {    
-    db_updateAttachment(print_request_id, m_file_name, m_total_page, m_base64_data);
-    $('#attachment_file').filestyle('clear');
 }
 ////////////////////////////////////////////////////////////////////////////////
 function calculateDupTotalCost() {

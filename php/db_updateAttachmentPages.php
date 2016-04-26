@@ -5,7 +5,7 @@
     $Pages = filter_input(INPUT_POST, 'Pages');
 
     $query = "UPDATE [IVCDCENTER].[dbo].[Attachment] "
-                . "SET Pages = '".$Pages."' "
+                . "SET Pages = '".$Pages."', PDFData = NULL "
                 . "WHERE AttachmentID = '".$AttachmentID."'";
     
     $cmd = $dbConn->prepare($query);
