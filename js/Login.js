@@ -17,7 +17,7 @@ window.onload = function() {
                 window.open('browser_not_support.html', '_self');
             break;
         case "Internet Explorer":
-            if (curVersion < 10)
+            if (curVersion < 11)
                 window.open('browser_not_support.html', '_self');
             break;
         default:     
