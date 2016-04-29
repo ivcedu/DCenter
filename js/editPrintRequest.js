@@ -1047,7 +1047,7 @@ function duplexValue() {
         m_letter_color = 0.195;
         m_legal = 0.055;
         m_legal_color = 0.295;
-        m_tabloid = 0.95;
+        m_tabloid = 0.095;
         m_tabloid_color = 0.395;
     }
     else {
