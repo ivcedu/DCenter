@@ -550,6 +550,9 @@ function getDeviceType() {
     
     var html = "";
     for (var i = 0; i < result.length; i++) {
+        if (result[i]['CopyDrop'] === "1") {
+            continue;
+        }
         html += "<option value='" + result[i]['DeviceTypeID'] + "'>" + result[i]['DeviceType'] + "</option>";
     }
     
