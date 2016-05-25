@@ -355,7 +355,7 @@ $(document).ready(function() {
                }
             );
         
-        db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), device + " print request has been canceled");
+        db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), " print request has been canceled");
         sendEmailCancelAdmin();
             
         db_updatePrintRequestLocked(print_request_id, false);
