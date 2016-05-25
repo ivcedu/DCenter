@@ -938,7 +938,7 @@ function sendEmailDuplicatingRequestor(print_request_id) {
     message += "Request Title: " + $('#request_title').val() + "<br>";
     message += "Date Needed: " + $('#date_needed').val() + " " + $('#time_needed').val() + "<br>";
     message += "Quantity: " + $('#quantity').val() + "<br>";
-    message += "Department: " + $('#department').val() + "<br><br>";
+    message += "Department: " + db_getDepartmentName($('#department').val()) + "<br><br>";
     
     message += "Please use the link below to review the status of your submission at any time.<br><br>";
 
